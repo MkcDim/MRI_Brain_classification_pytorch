@@ -64,7 +64,7 @@ for epoch in range(EPOCHS):
             running_loss = 0.0
 
 
-# Calculate the accuracy of the model
+# Calculate the accuracy of the model on the training data
 model.eval()
 
 #intialize the counters for accuracy calculation
@@ -88,3 +88,59 @@ with torch.no_grad():
 accuracy = 100 * correct / total
 # Print the accuracy
 print('Accuracy of the model on the train images: %d %%' % accuracy)
+
+
+# Load the test data
+
+test_data = datasets.ImageFolder(root = test_path, transform=train_transforms)
+test_loader = DataLoader(test_data, batch_size=32, shuffle=True)
+
+
+
+# Calculate the accuracy of the model on testing data 
+model.eval()
+
+#intialize the counters for accuracy calculation
+correct = 0
+total = 0
+
+with torch.no_grad():
+    for data in test_loader:
+        images, labels = data
+        images, labels = images.to(device), labels.to(device)
+        #make predictions
+        outputs = model(images)
+        _, predicted = torch.max(outputs.data, 1) # get the class with the highest probability
+
+        #update the counters
+        total += labels.size(0)
+        correct += (predicted == labels).sum().item()
+
+
+# Calculate the accuracy
+accuracy = 100 * correct / total
+# Print the accuracy
+print('Accuracy of the model on the test images: %d %%' % accuracy)
+
+#Predict the class of an image
+
+class_names = ['glioma_tumor', 'meningioma_tumor', 'no_tumor', 'pituitary_tumor']
+
+def predict_image(image_path):
+    image = Image.open(image_path)
+
+    # Apply the transformation
+    image = train_transforms(image).unsqueeze(0)
+    model.to(device)
+    image = image.to(device)
+
+    # Make a prediction
+    with torch.no_grad():
+        output = model(image)
+        _, predicted = torch.max(output.data, 1)
+
+    # Get the class label
+    class_label = class_names[predicted.item()]
+    return  class_label
+
+
