@@ -46,7 +46,7 @@ optimizer = optim.Adam(model.parameters(), lr=0.001)
 # Training the model
 model.train()
 
-EPOCHS = 10
+EPOCHS = 100
 
 for epoch in range(EPOCHS):
     running_loss = 0.0
@@ -144,3 +144,7 @@ def predict_image(image_path):
     return  class_label
 
 
+
+image_path = os.path.join(data_path,'image(1).jpg')
+prediction = predict_image(image_path)
+print(f"This is the image of {prediction}.")
