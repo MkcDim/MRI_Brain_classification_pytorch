@@ -39,7 +39,7 @@ def model_initialisation(device, learning_rate = 0.001, nb_classes = 4):
 
     return model, criterion, optimizer
 
-def training_model(device, model, criterion, optimizer, train_loader,val_loader=None, epochs,checkpoint_path=None):
+def training_model(device, model, criterion, optimizer, train_loader,val_loader=None, epochs = 10  ,checkpoint_path=None):
     """
     Train a PyTorch model with optional validation and checkpointing.
 
@@ -197,14 +197,14 @@ def main():
             print("Model loaded successfully.")
         except Exception as e:
             print(f"Failed to load model: {e}. Retraining the model...")
-            trained_model = training_model(device, model, criterion, optimizer, train_transformed_loader, args.max_epochs)
+            trained_model = training_model(device, model, criterion, optimizer, train_transformed_loader, epochs = args.max_epochs)
             save_model(trained_model, os.path.join(args.results_dir, 'model.pth'))
     else:
         print("No pre-trained model found. Starting training...")
-        trained_model = training_model(device, model, criterion, optimizer, train_transformed_loader, args.max_epochs)
+        trained_model = training_model(device, model, criterion, optimizer, train_transformed_loader, epochs = args.max_epochs)
         save_model(trained_model, os.path.join(args.results_dir, 'model.pth'))
         print("Model trained and saved.")
-        
+
     model_evaluation(device, model, train_transformed_loader, 'training')
 
     model_evaluation(device, model, test_transformed_loader, 'testing')
