@@ -40,8 +40,6 @@ def model_initialisation(device, learning_rate = 0.001, nb_classes = 4):
     return model, criterion, optimizer
 
 def training_model(device, model, criterion, optimizer, train_loader, epochs):
-    
-    
     model.train()
     for epoch in range(epochs):
         running_loss = 0.0
@@ -54,7 +52,7 @@ def training_model(device, model, criterion, optimizer, train_loader, epochs):
             loss.backward()
             optimizer.step()
             running_loss += loss.item()
-            if i % epochs == 9:
+            if i % 10 == 9:
                 print('[%d, %5d] loss: %.3f' % (epoch + 1, i + 1, running_loss / 10))
                 running_loss = 0.0
     print('Finished Training')
